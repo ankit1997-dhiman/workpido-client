@@ -48,10 +48,13 @@ const PricingTable = ({ data, totalPlans, size, onUpdate, isViewOnly }) => {
     if (totalPlans != tableData?.plans?.length) {
       console.log(new Array(totalPlans).fill("Your Plan Name"));
       setTableData({
-        plans: new Array(totalPlans).fill("Your Plan Name"),
-        attributes: ["Attribute Name"],
+        plans: totalPlans === 3
+          ? ["Basic", "Standard", "Premium"]
+          : new Array(totalPlans).fill("Basic Plan"),
+        attributes: ["Package summary", "Pricing"],
         data: {
-          "Attribute Name": new Array(totalPlans).fill("Value"),
+          "Package summary": new Array(totalPlans).fill(""),
+          "Pricing": new Array(totalPlans).fill(""),
         },
       });
     }
@@ -179,19 +182,23 @@ const PricingTable = ({ data, totalPlans, size, onUpdate, isViewOnly }) => {
                 <Th borderRight={"1px"} py={6} color={"#000"}>
                   #
                 </Th>
-                {tableData?.plans?.map((data, key) => (
+                {tableData?.plans?.map((planName, key) => (
                   <Th borderRight={"1px"} key={key} py={6} color={"#000"}>
-                    <EditableData
-                      isViewOnly={isViewOnly}
-                      defaultValue={data}
-                      onChange={(data) =>
-                        handleDataUpdate({
-                          propertyToUpdate: "plans",
-                          index: key,
-                          data: data,
-                        })
-                      }
-                    />
+                    {totalPlans === 1 ? (
+                      <Text>Basic</Text>
+                    ) : (
+                      <EditableData
+                        isViewOnly={isViewOnly}
+                        defaultValue={planName}
+                        onChange={(data) =>
+                          handleDataUpdate({
+                            propertyToUpdate: "plans",
+                            index: key,
+                            data: data,
+                          })
+                        }
+                      />
+                    )}
                   </Th>
                 ))}
               </Tr>
@@ -235,7 +242,7 @@ const PricingTable = ({ data, totalPlans, size, onUpdate, isViewOnly }) => {
             </Tbody>
           </Table>
         </TableContainer>
-        {isViewOnly ? null : (
+        {/* {isViewOnly ? null : (
           <HStack justifyContent={"flex-end"} py={4}>
             <Button
               colorScheme="red"
@@ -258,7 +265,7 @@ const PricingTable = ({ data, totalPlans, size, onUpdate, isViewOnly }) => {
               Add New Row
             </Button>
           </HStack>
-        )}
+        )} */}
       </Box>
     </>
   );
